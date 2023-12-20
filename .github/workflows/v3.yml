@@ -60,7 +60,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    if: ${{ always() && needs.github.event.inputs.BypassCodeScan == 'true' }}
+    if: ${{ always() && github.event.inputs.BypassCodeScan == 'true' }}
     needs: [build-and-test, code-scan]
     steps:
       - name: Checkout
