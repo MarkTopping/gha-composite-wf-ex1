@@ -80,7 +80,7 @@ jobs:
 
   deploy-to-dev:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.DeployToUatSecondary == 'false' && github.event.inputs.DeployToPrdSecondary == 'false' }}
+    if: ${{ always() && github.event.inputs.DeployToUatSecondary == 'false' && github.event.inputs.DeployToPrdSecondary == 'false' }}
     needs: [publish]
     environment: dev
     steps:
