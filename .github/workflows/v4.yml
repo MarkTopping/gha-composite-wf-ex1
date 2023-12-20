@@ -99,7 +99,7 @@ jobs:
 
   deploy-to-test:
     runs-on: ubuntu-latest
-    if: ${{ inputs.DeployToUatSecondary == false && inputs.DeployToPrdSecondary == false }}
+    if: inputs.DeployToUatSecondary == false && inputs.DeployToPrdSecondary == false
     needs: [publish]
     environment: test
     steps:
