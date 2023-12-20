@@ -91,9 +91,11 @@ jobs:
         run: echo "deploying via helm"
       - name: Capture dependencies
         env:
-          NEEDS: ${{ toJSON(needs) }}     
+          NEEDS: ${{ toJSON(needs) }}
+          INPUTS: ${{ toJSON(inputs) }}
         run: |
           echo "$NEEDS"
+          echo "$INPUTS"
 
   deploy-to-test:
     runs-on: ubuntu-latest
