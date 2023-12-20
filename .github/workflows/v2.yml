@@ -7,11 +7,11 @@ on:
   workflow_dispatch:
     inputs:
       DeployToUatSecondary:
-        description: 'An override to allow deployment into UAT Secondary'
+        description: 'Deploy into UAT Secondary region? (true/false)'
         required: false
         default: 'false'
       DeployToPrdSecondary:
-        description: 'An override to allow deployment into Prd Secondary'
+        description: 'Deploy into Prd Secondary region? (true/false)'
         required: false
         default: 'false'
         
