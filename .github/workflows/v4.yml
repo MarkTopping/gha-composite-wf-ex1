@@ -9,15 +9,15 @@ on:
       DeployToUatSecondary:
         description: 'Deploy into UAT Secondary region?'
         required: false
-        default: 'false'
+        default: false
       DeployToPrdSecondary:
         description: 'Deploy into Prd Secondary region?'
         required: false
-        default: 'false'
+        default: false
       BypassCodeScan:
         description: 'Bypass code scan?'
         required: false
-        default: 'false'
+        default: false
         
   # Auto trigger when pushes to selected branch naming conventions occur
   push: 
@@ -49,7 +49,7 @@ jobs:
 
   code-scan:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.BypassCodeScan != 'true' }}
+    if: ${{ github.event.inputs.BypassCodeScan != true }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -60,7 +60,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    if: ${{ always() && (github.event.inputs.BypassCodeScan == 'true' || needs.code-scan.result == 'success') }}
+    if: ${{ always() && (github.event.inputs.BypassCodeScan == true || needs.code-scan.result == 'success') }}
     needs: [build-and-test, code-scan]
     steps:
       - name: Checkout
@@ -94,7 +94,7 @@ jobs:
 
   deploy-to-test:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.DeployToUatSecondary != 'true' || github.event.inputs.DeployToPrdSecondary != 'true' }}
+    if: ${{ github.event.inputs.DeployToUatSecondary != true || github.event.inputs.DeployToPrdSecondary != true }}
     needs: [publish]
     environment: test
     steps:
@@ -103,7 +103,7 @@ jobs:
 
   deploy-to-uat-primary:
     # only runnable if deploying a tag
-    if: ${{ startsWith(github.ref, 'refs/tags/') && github.event.inputs.DeployToUatSecondary == 'false' }}
+    if: ${{ startsWith(github.ref, 'refs/tags/') && github.event.inputs.DeployToUatSecondary == false }}
     runs-on: ubuntu-latest
     needs: [publish, deploy-to-test]
     environment: uat
@@ -119,7 +119,7 @@ jobs:
   # Main issue here... cannot manually mark a pre-req Job as successful in GH
   deploy-to-uat-secondary:
     # only runnable if deploying a tag
-    if: ${{ startsWith(github.ref, 'refs/tags/') && github.event.inputs.DeployToUatSecondary == 'true' }}
+    if: ${{ startsWith(github.ref, 'refs/tags/') && github.event.inputs.DeployToUatSecondary == true }}
     runs-on: ubuntu-latest
     needs: [publish]
     environment: uat
@@ -129,7 +129,7 @@ jobs:
 
   deploy-to-prd-primary:
     # only runnable if deploying a tag
-    if: ${{ startsWith(github.ref, 'refs/tags/') && github.event.inputs.DeployToPrdSecondary == 'false' }}
+    if: ${{ startsWith(github.ref, 'refs/tags/') && github.event.inputs.DeployToPrdSecondary == false }}
     runs-on: ubuntu-latest
     needs: [publish, deploy-to-uat-primary]
     environment: prd
@@ -139,7 +139,7 @@ jobs:
         
   deploy-to-prd-secondary:
     # only runnable if deploying a tag
-    if: ${{ startsWith(github.ref, 'refs/tags/') && github.event.inputs.DeployToPrdSecondary == 'true' }}
+    if: ${{ startsWith(github.ref, 'refs/tags/') && github.event.inputs.DeployToPrdSecondary == true }}
     runs-on: ubuntu-latest
     needs: [publish]
     environment: prd
