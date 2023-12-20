@@ -80,12 +80,17 @@ jobs:
 
   deploy-to-dev:
     runs-on: ubuntu-latest
-    if: ${{ always() && github.event.inputs.DeployToUatSecondary == 'false' && github.event.inputs.DeployToPrdSecondary == 'false' }}
+    if: ${{ always() }}
     needs: [publish]
     environment: dev
     steps:
       - name: Deploy to Dev
         run: echo "deploying via helm"
+      - name: Capture dependencies
+        env:
+          NEEDS: ${{ toJSON(needs) }}     
+        run: |
+          echo "$NEEDS"
 
   deploy-to-test:
     runs-on: ubuntu-latest
