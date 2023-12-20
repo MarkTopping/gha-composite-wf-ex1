@@ -83,7 +83,8 @@ jobs:
 
   deploy-to-dev:
     runs-on: ubuntu-latest
-    if: ${{ always() }}
+    # Logic lets Job run if Code-Scan was skipped, but only triggers if we're not deploying to a Secondary region
+    if: ${{ always() && (inputs.DeployToUatSecondary == false && inputs.DeployToPrdSecondary == false) }}
     needs: [publish]
     environment: dev
     steps:
@@ -99,7 +100,9 @@ jobs:
 
   deploy-to-test:
     runs-on: ubuntu-latest
-    if: inputs.DeployToUatSecondary == false && inputs.DeployToPrdSecondary == false
+    # Same conditions as deploy-to-dev
+    # Logic lets Job run if Code-Scan was skipped, but only triggers if we're not deploying to a Secondary region    
+    if: ${{ always() && (inputs.DeployToUatSecondary == false && inputs.DeployToPrdSecondary == false) }}
     needs: [publish]
     environment: test
     steps:
