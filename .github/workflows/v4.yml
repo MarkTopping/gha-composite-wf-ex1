@@ -63,7 +63,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    if: ${{ inputs.BypassCodeScan == true || needs.code-scan.result == 'success' }}
+    if: ${{ always() && (inputs.BypassCodeScan == true || needs.code-scan.result == 'success') }}
     needs: [build-and-test, code-scan]
     steps:
       - name: Checkout
