@@ -94,7 +94,7 @@ jobs:
 
   deploy-to-test:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.DeployToUatSecondary == 'false' && github.event.inputs.DeployToPrdSecondary == 'false' }}
+    if: ${{ github.event.inputs.DeployToUatSecondary != 'true' || github.event.inputs.DeployToPrdSecondary != 'true' }}
     needs: [publish]
     environment: test
     steps:
